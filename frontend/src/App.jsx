@@ -61,10 +61,10 @@ function MainApp() {
     const token = urlParams.get('token');
     const email = urlParams.get('email');
 
-    if (window.location.pathname === '/verify-email' || (token && !email)) {
+    if (window.location.pathname.endsWith('/verify-email') || (token && !email)) {
       setAuthView('verify-email');
       if (token) setResetTokenData({ token, email: '' });
-    } else if (window.location.pathname === '/reset-password' || (token && email)) {
+    } else if (window.location.pathname.endsWith('/reset-password') || (token && email)) {
       setAuthView('reset-password');
       if (token) setResetTokenData({ token, email: email || '' });
     }
