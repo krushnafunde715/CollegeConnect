@@ -39,6 +39,11 @@ jobs:
         working-directory: frontend
         run: npm run build
 
+      - name: Prepare SPA routing and Jekyll bypass
+        run: |
+          touch frontend/dist/.nojekyll
+          cp frontend/dist/index.html frontend/dist/404.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
