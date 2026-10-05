@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/CollegeConnect/',
+  base: process.env.VITE_BASE_PATH || (process.env.GITHUB_ACTIONS ? '/CollegeConnect/' : '/'),
   plugins: [
     react(),
     tailwindcss(),
