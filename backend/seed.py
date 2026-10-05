@@ -10,8 +10,10 @@ from app.models.placement import Company, PlacementDrive, Application, Offer
 from app.models.privacy import PrivacyNotice, ConsentRecord, PrivacyRequest, CorrectionRequest, AuditLog
 from app.security.argon2_hasher import hash_password
 
-def seed_database():
-    app = create_app('development')
+def seed_database(config_name=None):
+    if config_name is None:
+        config_name = os.getenv('FLASK_ENV', 'development')
+    app = create_app(config_name)
     with app.app_context():
         print("Creating database schema...")
         db.create_all()

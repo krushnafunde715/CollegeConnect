@@ -10,14 +10,17 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=int(os.getenv("JWT_ACCESS_HOURS", "8")))
 
     # Database
-    # Support PostgreSQL with SQLite local development fallback
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL",
-        f"sqlite:///{os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'collegeconnect.db'))}"
-    )
-    # Fix potential postgres:// vs postgresql:// URI format
-    if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
-        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
+    # Support PostgreSQL with psycopg2 driver and SQLite local development fallback
+    _raw_db_url = os.getenv("DATABASE_URL")
+    if _raw_db_url:
+        if _raw_db_url.startswith("postgres://"):
+            SQLALCHEMY_DATABASE_URI = _raw_db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+        elif _raw_db_url.startswith("postgresql://"):
+            SQLALCHEMY_DATABASE_URI = _raw_db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+        else:
+            SQLALCHEMY_DATABASE_URI = _raw_db_url
+    else:
+        SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'collegeconnect.db'))}"
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = os.getenv("SQLALCHEMY_ECHO", "false").lower() == "true"
